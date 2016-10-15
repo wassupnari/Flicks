@@ -69,7 +69,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     
         
         // Set image
-        Alamofire.request("https://httpbin.org/image/png").responseImage { response in
+        Alamofire.request("https://image.tmdb.org/t/p/w300\(path)").responseImage { response in
             debugPrint(response)
             
             print(response.request)
