@@ -9,7 +9,7 @@
 import UIKit
 import SwiftyJSON
 import Alamofire
-
+import AlamofireImage
 
 class FlickTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -63,6 +63,22 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         let cell = tableView.dequeueReusableCell(withIdentifier: "com.nari.MoviePrototypeCell", for: indexPath) as! MoviePrototypeCell
         let path = posterPathList[indexPath.row]
         cell.mMovieLabel.text = path
+        
+        // Set image
+        Alamofire.request("https://httpbin.org/image/png").responseImage { response in
+            debugPrint(response)
+            
+            print(response.request)
+            print(response.response)
+            debugPrint(response.result)
+            
+            cell.mMovieImageView.image = response.result.value
+            /*
+            if let image = response.result.value {
+                print("image downloaded: \(image)")
+            } */
+        }
+        
         print("row path : \(path)")
         //cell.stateLabel.text = cityState.last
         return cell
