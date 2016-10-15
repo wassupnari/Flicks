@@ -12,6 +12,7 @@ target 'Flicks' do
   pod 'Alamofire',
   :git => 'https://github.com/Alamofire/Alamofire.git',
   :branch => '4.0.1'
+  pod 'AlamofireImage', '~> 3.1'
   
   post_install do |installer|
       installer.pods_project.targets.each do |target|

@@ -21,11 +21,14 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - Alamofire (4.0.1)
+  - AlamofireImage (3.1.0):
+    - Alamofire (~> 4.0)
   - SwiftyJSON (3.1.1)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.6)
   - Alamofire (from `https://github.com/Alamofire/Alamofire.git`, branch `4.0.1`)
+  - AlamofireImage (~> 3.1)
   - SwiftyJSON
 
 EXTERNAL SOURCES:
@@ -41,8 +44,9 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
   Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
+  AlamofireImage: bb8c8351c51cb1633bb6be69b6dbbaff37ce65b7
   SwiftyJSON: f0be2e604f83e8405a624e9f891898bf6ed4e019
 
-PODFILE CHECKSUM: 9240e33dde8bc68f81d37d3a0ae70f3e834c72df
+PODFILE CHECKSUM: 3b133b3e2d13464663621eea145e5927af847322
 
 COCOAPODS: 1.0.1
