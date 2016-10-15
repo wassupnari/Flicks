@@ -30,10 +30,18 @@
                                                     <frame key="frameInset" minX="8" minY="-4" width="91" height="77"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NNK-CO-yt8">
+                                                    <frame key="frameInset" minX="126" minY="24" width="42" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="mMovieImageView" destination="CWN-kN-EEE" id="5nX-s2-bZP"/>
+                                            <outlet property="mMovieLabel" destination="NNK-CO-yt8" id="xMR-a5-fRY"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

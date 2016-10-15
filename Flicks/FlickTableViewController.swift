@@ -10,7 +10,8 @@ import UIKit
 import SwiftyJSON
 import Alamofire
 
-class FlickTableViewController: UIViewController {
+
+class FlickTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var mNowPlayingTableView: UITableView!
     
@@ -20,6 +21,11 @@ class FlickTableViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        // Setting view's data source and delegate properties
+        mNowPlayingTableView.dataSource = self
+        mNowPlayingTableView.delegate = self
+        mNowPlayingTableView.rowHeight = UITableViewAutomaticDimension
         
         let apiKey = "deb86c335a6b5db138bb7565e746952b"
         let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)"
@@ -53,19 +59,18 @@ class FlickTableViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    func parse(json: JSON) {
-        debugPrint("int parse method")
-        for result in json["results"].arrayValue {
-            debugPrint("for loop")
-            let posterPath = result["poster_path"].stringValue
-            let overview = result["overview"].stringValue
-            
-            debugPrint("Path : \(posterPath)")
-            let obj = ["poster_path": posterPath, "overview": overview]
-            data.append(obj)
-        }
-        
-        
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "com.nari.MoviePrototypeCell", for: indexPath) as! MoviePrototypeCell
+        let path = posterPathList[indexPath.row]
+        cell.mMovieLabel.text = path
+        print("row path : \(path)")
+        //cell.stateLabel.text = cityState.last
+        return cell
     }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return posterPathList.count
+    }
+
 }
 
