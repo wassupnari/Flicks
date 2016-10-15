@@ -1,14 +1,17 @@
 //
-//  MoviePrototypeCellTableViewCell.swift
+//  MovieCell.swift
 //  Flicks
 //
-//  Created by Nari Shin on 10/14/16.
+//  Created by Nari Shin on 10/15/16.
 //  Copyright © 2016 Nari Shin. All rights reserved.
 //
 
 import UIKit
 
-class MoviePrototypeCell: UITableViewCell {
+class MovieCell: UITableViewCell {
+
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var movieImageView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,5 +23,5 @@ class MoviePrototypeCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
+    
 }

@@ -26,6 +26,8 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         mNowPlayingTableView.dataSource = self
         mNowPlayingTableView.delegate = self
         mNowPlayingTableView.rowHeight = UITableViewAutomaticDimension
+        // We need to register the cell first
+        mNowPlayingTableView.register(UINib(nibName: "MovieCell", bundle: nil), forCellReuseIdentifier: "MovieCell")
         
         let apiKey = "deb86c335a6b5db138bb7565e746952b"
         let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)"
@@ -51,6 +53,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                         }
                     }
                 }
+                self.mNowPlayingTableView.reloadData()
             }
     }
 
@@ -60,9 +63,10 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "com.nari.MoviePrototypeCell", for: indexPath) as! MoviePrototypeCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as! MovieCell
         let path = posterPathList[indexPath.row]
-        cell.mMovieLabel.text = path
+        cell.titleLabel.text = path
+    
         
         // Set image
         Alamofire.request("https://httpbin.org/image/png").responseImage { response in
@@ -72,13 +76,15 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
             print(response.response)
             debugPrint(response.result)
             
-            cell.mMovieImageView.image = response.result.value
+            cell.movieImageView.image = response.result.value
             /*
             if let image = response.result.value {
                 print("image downloaded: \(image)")
             } */
+            
+            
         }
-        
+    
         print("row path : \(path)")
         //cell.stateLabel.text = cityState.last
         return cell
