@@ -20,7 +20,7 @@ class FlickTableViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
+        let apiKey = "deb86c335a6b5db138bb7565e746952b"
         let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)"
         
         Alamofire.request(url)
