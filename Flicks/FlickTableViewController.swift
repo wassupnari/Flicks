@@ -17,6 +17,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     
     var data = [[String: String]]()
     var posterPathList = [String]()
+    var movieTitle = [String]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,9 +48,12 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                     //let resultData = swiftyJsonVar["results"].arrayObject!
                     
                     for (_,subJson) in swiftyJsonVar["results"] {
-                        if let title = subJson["poster_path"].string {
-                            print(title)
-                            self.posterPathList.append(title)
+                        if let posterPath = subJson["poster_path"].string {
+                            print(posterPath)
+                            self.posterPathList.append(posterPath)
+                        }
+                        if let title = subJson["title"].string {
+                            self.movieTitle.append(title)
                         }
                     }
                 }
@@ -65,7 +69,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as! MovieCell
         let path = posterPathList[indexPath.row]
-        cell.titleLabel.text = path
+        cell.titleLabel.text = movieTitle[indexPath.row]
     
         
         // Set image
