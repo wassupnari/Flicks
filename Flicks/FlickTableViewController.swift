@@ -12,6 +12,8 @@ import Alamofire
 
 class FlickTableViewController: UIViewController {
     
+    @IBOutlet weak var mNowPlayingTableView: UITableView!
+    
     var data = [[String: String]]()
 
     override func viewDidLoad() {
