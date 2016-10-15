@@ -15,6 +15,7 @@ class FlickTableViewController: UIViewController {
     @IBOutlet weak var mNowPlayingTableView: UITableView!
     
     var data = [[String: String]]()
+    var posterPathList = [String]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,9 +35,15 @@ class FlickTableViewController: UIViewController {
                 
                 if((response.result.value) != nil) {
                     let swiftyJsonVar = JSON(response.result.value!)
-                    let totalResults = swiftyJsonVar["total_results"].int
-                    print(swiftyJsonVar)
-                    print("total result : \(totalResults)")
+                    //let totalResults = swiftyJsonVar["total_results"].int
+                    //let resultData = swiftyJsonVar["results"].arrayObject!
+                    
+                    for (_,subJson) in swiftyJsonVar["results"] {
+                        if let title = subJson["poster_path"].string {
+                            print(title)
+                            self.posterPathList.append(title)
+                        }
+                    }
                 }
             }
     }
