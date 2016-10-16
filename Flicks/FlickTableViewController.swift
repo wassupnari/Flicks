@@ -19,10 +19,23 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     var posterPathList = [String]()
     var imageList = [UIImage]()
     var movieTitle = [String]()
+    
+    /*
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(FlickTableViewController.refreshControlAction(_:)), for: UIControlEvents.valueChanged)
+        
+        return refreshControl
+    }()*/
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        // For pull-to-refresh
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(FlickTableViewController.refreshControlAction(_:)), for: UIControlEvents.valueChanged)
+        mNowPlayingTableView.insertSubview(refreshControl, at: 0)
         
         // Setting view's data source and delegate properties
         mNowPlayingTableView.dataSource = self
@@ -40,9 +53,6 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                 //NSLog("response : \(response)")
             }
             .responseJSON { response in
-                //debugPrint(response)
-                debugPrint("got the response")
-                
                 if((response.result.value) != nil) {
                     let swiftyJsonVar = JSON(response.result.value!)
                     //let totalResults = swiftyJsonVar["total_results"].int
@@ -67,6 +77,36 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func refreshControlAction(_ refreshControl: UIRefreshControl) {
+        
+        let apiKey = "deb86c335a6b5db138bb7565e746952b"
+        let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)"
+        
+        Alamofire.request(url)
+            .response { response in
+                //debugPrint(response)
+                //NSLog("response : \(response)")
+            }
+            .responseJSON { response in
+                if((response.result.value) != nil) {
+                    let swiftyJsonVar = JSON(response.result.value!)
+                    for (_,subJson) in swiftyJsonVar["results"] {
+                        if let posterPath = subJson["poster_path"].string {
+                            print(posterPath)
+                            self.posterPathList.append(posterPath)
+                        }
+                        if let title = subJson["title"].string {
+                            self.movieTitle.append(title)
+                        }
+                        let tmpImage = UIImage()
+                        self.imageList.append(tmpImage)
+                    }
+                }
+                self.mNowPlayingTableView.reloadData()
+                refreshControl.endRefreshing()
+            }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
