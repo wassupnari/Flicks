@@ -26,9 +26,9 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         // Setting view's data source and delegate properties
         mNowPlayingTableView.dataSource = self
         mNowPlayingTableView.delegate = self
-        mNowPlayingTableView.rowHeight = UITableViewAutomaticDimension
+        mNowPlayingTableView.rowHeight = 120
         // We need to register the cell first
-        mNowPlayingTableView.register(UINib(nibName: "MovieCell", bundle: nil), forCellReuseIdentifier: "MovieCell")
+        //mNowPlayingTableView.register(UINib(nibName: "MovieCell", bundle: nil), forCellReuseIdentifier: "MovieCell")
         
         let apiKey = "deb86c335a6b5db138bb7565e746952b"
         let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)"
@@ -67,9 +67,9 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as! MovieCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "com.nari.MoviePrototypeCell", for: indexPath) as! MoviePrototypeCell
         let path = posterPathList[indexPath.row]
-        cell.titleLabel.text = movieTitle[indexPath.row]
+        cell.movieTitle.text = movieTitle[indexPath.row]
     
         
         // Set image
@@ -80,7 +80,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
             print(response.response)
             debugPrint(response.result)
             
-            cell.movieImageView.image = response.result.value
+            cell.movieImage.image = response.result.value
             /*
             if let image = response.result.value {
                 print("image downloaded: \(image)")
@@ -96,6 +96,20 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return posterPathList.count
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: IndexPath) {
+        mNowPlayingTableView.deselectRow(at: indexPath, animated: true)
+        // do something here
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let detailsViewController = segue.destination as? DetailsViewController
+        /*let indexPath = self.mNowPlayingTableView.indexPathForSelectedRow {
+            let photoUrl = self.posterPathList[indexPath.row]
+        }*/
+        
+        //detailsViewController.imageView = cell.
     }
 
 }
