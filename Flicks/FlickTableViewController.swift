@@ -19,6 +19,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     var posterPathList = [String]()
     var imageList = [UIImage]()
     var movieTitle = [String]()
+    let alertController = UIAlertController(title: nil, message: "Please wait\n\n", preferredStyle: UIAlertControllerStyle.alert)
     
     /*
     lazy var refreshControl: UIRefreshControl = {
@@ -36,6 +37,16 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(FlickTableViewController.refreshControlAction(_:)), for: UIControlEvents.valueChanged)
         mNowPlayingTableView.insertSubview(refreshControl, at: 0)
+        
+        // Loader
+        let spinnerIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
+        
+        spinnerIndicator.center = CGPoint(x: 135.0, y: 65.5)
+        spinnerIndicator.color = UIColor.black
+        spinnerIndicator.startAnimating()
+        
+        alertController.view.addSubview(spinnerIndicator)
+        self.present(alertController, animated: false, completion: nil)
         
         // Setting view's data source and delegate properties
         mNowPlayingTableView.dataSource = self
@@ -71,6 +82,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                     }
                 }
                 self.mNowPlayingTableView.reloadData()
+                self.dismiss(animated: false, completion: nil)
             }
     }
 
@@ -80,6 +92,8 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func refreshControlAction(_ refreshControl: UIRefreshControl) {
+        
+        self.present(alertController, animated: false, completion: nil)
         
         let apiKey = "deb86c335a6b5db138bb7565e746952b"
         let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)"
@@ -106,6 +120,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                 }
                 self.mNowPlayingTableView.reloadData()
                 refreshControl.endRefreshing()
+                self.dismiss(animated: false, completion: nil)
             }
     }
 
