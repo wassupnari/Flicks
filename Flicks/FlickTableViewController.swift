@@ -53,9 +53,6 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                 //NSLog("response : \(response)")
             }
             .responseJSON { response in
-                //debugPrint(response)
-                debugPrint("got the response")
-                
                 if((response.result.value) != nil) {
                     let swiftyJsonVar = JSON(response.result.value!)
                     //let totalResults = swiftyJsonVar["total_results"].int
@@ -84,20 +81,8 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func refreshControlAction(_ refreshControl: UIRefreshControl) {
         
-        // ... Create the NSURLRequest (myRequest) ...
-        
-        // Configure session so that completion handler is executed on main UI thread
-        /*
-        let session = NSURLSession(
-            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
-            delegate:nil,
-            delegateQueue:NSOperationQueue.mainQueue()
-        )*/
-        
         let apiKey = "deb86c335a6b5db138bb7565e746952b"
         let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)"
-        
-        debugPrint("Refresh control action")
         
         Alamofire.request(url)
             .response { response in
@@ -105,16 +90,8 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                 //NSLog("response : \(response)")
             }
             .responseJSON { response in
-                //debugPrint(response)
-                debugPrint("got the response")
-                
                 if((response.result.value) != nil) {
                     let swiftyJsonVar = JSON(response.result.value!)
-                    //let totalResults = swiftyJsonVar["total_results"].int
-                    //let resultData = swiftyJsonVar["results"].arrayObject!
-                    
-                    debugPrint("Got Alamofire response")
-                    
                     for (_,subJson) in swiftyJsonVar["results"] {
                         if let posterPath = subJson["poster_path"].string {
                             print(posterPath)
@@ -130,8 +107,6 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                 self.mNowPlayingTableView.reloadData()
                 refreshControl.endRefreshing()
             }
-        //});
-        //task.resume()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
