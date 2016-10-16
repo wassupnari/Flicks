@@ -17,6 +17,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     
     var data = [[String: String]]()
     var posterPathList = [String]()
+    var imageList = [UIImage]()
     var movieTitle = [String]()
 
     override func viewDidLoad() {
@@ -26,9 +27,9 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         // Setting view's data source and delegate properties
         mNowPlayingTableView.dataSource = self
         mNowPlayingTableView.delegate = self
-        mNowPlayingTableView.rowHeight = UITableViewAutomaticDimension
+        mNowPlayingTableView.rowHeight = 120
         // We need to register the cell first
-        mNowPlayingTableView.register(UINib(nibName: "MovieCell", bundle: nil), forCellReuseIdentifier: "MovieCell")
+        //mNowPlayingTableView.register(UINib(nibName: "MovieCell", bundle: nil), forCellReuseIdentifier: "MovieCell")
         
         let apiKey = "deb86c335a6b5db138bb7565e746952b"
         let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)"
@@ -55,6 +56,8 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                         if let title = subJson["title"].string {
                             self.movieTitle.append(title)
                         }
+                        let tmpImage = UIImage()
+                        self.imageList.append(tmpImage)
                     }
                 }
                 self.mNowPlayingTableView.reloadData()
@@ -67,9 +70,9 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as! MovieCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "com.nari.MoviePrototypeCell", for: indexPath) as! MoviePrototypeCell
         let path = posterPathList[indexPath.row]
-        cell.titleLabel.text = movieTitle[indexPath.row]
+        cell.movieTitle.text = movieTitle[indexPath.row]
     
         
         // Set image
@@ -80,12 +83,9 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
             print(response.response)
             debugPrint(response.result)
             
-            cell.movieImageView.image = response.result.value
-            /*
-            if let image = response.result.value {
-                print("image downloaded: \(image)")
-            } */
-            
+            cell.movieImage.image = response.result.value
+            // Insert data to pass them to detail page
+            self.imageList.insert(cell.movieImage.image!, at:indexPath.row)
             
         }
     
@@ -96,6 +96,26 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return posterPathList.count
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: IndexPath) {
+        mNowPlayingTableView.deselectRow(at: indexPath, animated: true)
+        // do something here
+    }
+    
+    /*
+     * Pass data to another viewController
+     */
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destinationViewController = segue.destination as! DetailsViewController
+        
+        if let indexPath = self.mNowPlayingTableView.indexPathForSelectedRow {
+            // do the work here
+            destinationViewController.photoUrl = posterPathList[indexPath.row]
+            destinationViewController.image = imageList[indexPath.row]
+            debugPrint("index : \(indexPath)")
+        }
+        
     }
 
 }

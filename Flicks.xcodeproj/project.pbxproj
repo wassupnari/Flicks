@@ -15,6 +15,7 @@
 		4D7394F61DB1F64800DEA004 /* MoviePrototypeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7394F51DB1F64800DEA004 /* MoviePrototypeCell.swift */; };
 		4D7394F91DB2A49800DEA004 /* MovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7394F71DB2A49800DEA004 /* MovieCell.swift */; };
 		4D7394FA1DB2A49800DEA004 /* MovieCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D7394F81DB2A49800DEA004 /* MovieCell.xib */; };
+		4D7394FC1DB2FFBB00DEA004 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7394FB1DB2FFBB00DEA004 /* DetailsViewController.swift */; };
 		A2CD485E16B9CDB3CACC5245 /* Pods_Flicks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F960204083B87B54CE47435 /* Pods_Flicks.framework */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +32,7 @@
 		4D7394F51DB1F64800DEA004 /* MoviePrototypeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoviePrototypeCell.swift; sourceTree = "<group>"; };
 		4D7394F71DB2A49800DEA004 /* MovieCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieCell.swift; sourceTree = "<group>"; };
 		4D7394F81DB2A49800DEA004 /* MovieCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MovieCell.xib; sourceTree = "<group>"; };
+		4D7394FB1DB2FFBB00DEA004 /* DetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
 		F5F8845A0735329D93E16564 /* Pods-Flicks.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Flicks.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Flicks/Pods-Flicks.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -85,6 +87,7 @@
 				4D7394F51DB1F64800DEA004 /* MoviePrototypeCell.swift */,
 				4D7394F71DB2A49800DEA004 /* MovieCell.swift */,
 				4D7394F81DB2A49800DEA004 /* MovieCell.xib */,
+				4D7394FB1DB2FFBB00DEA004 /* DetailsViewController.swift */,
 			);
 			path = Flicks;
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 				4D7394F61DB1F64800DEA004 /* MoviePrototypeCell.swift in Sources */,
 				4D7394F91DB2A49800DEA004 /* MovieCell.swift in Sources */,
 				4D7394E01DB0AADD00DEA004 /* AppDelegate.swift in Sources */,
+				4D7394FC1DB2FFBB00DEA004 /* DetailsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
