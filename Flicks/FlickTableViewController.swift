@@ -20,6 +20,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     var imageList = [UIImage]()
     var movieTitle = [String]()
     let alertController = UIAlertController(title: nil, message: "Please wait\n\n", preferredStyle: UIAlertControllerStyle.alert)
+    let errorAlertController = UIAlertController(title: "Error", message: "An error occurred. Please try it again", preferredStyle: UIAlertControllerStyle.alert)
     
     /*
     lazy var refreshControl: UIRefreshControl = {
@@ -58,12 +59,55 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         let apiKey = "deb86c335a6b5db138bb7565e746952b"
         let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)"
         
-        Alamofire.request(url)
+        Alamofire
+            .request(url)
             .response { response in
                 //debugPrint(response)
+                /*
+                debugPrint("nari \(response.response?.statusCode)")
+                if  let errorCode = response.response?.statusCode {
+                    switch errorCode {
+                    case 401:
+                        debugPrint("=========================")
+                    default:
+                        debugPrint("=")
+                        // do nothing
+                    }
+                }
+ */
                 //NSLog("response : \(response)")
             }
             .responseJSON { response in
+                
+                if  let errorCode = response.response?.statusCode {
+                    switch errorCode {
+                    case 401:
+                        self.dismiss(animated: false, completion: nil)
+                        self.present(self.errorAlertController, animated: false, completion: nil)
+                    case 200:
+                        if((response.result.value) != nil) {
+                            let swiftyJsonVar = JSON(response.result.value!)
+                            for (_,subJson) in swiftyJsonVar["results"] {
+                                if let posterPath = subJson["poster_path"].string {
+                                    print(posterPath)
+                                    self.posterPathList.append(posterPath)
+                                }
+                                if let title = subJson["title"].string {
+                                    self.movieTitle.append(title)
+                                }
+                                let tmpImage = UIImage()
+                                self.imageList.append(tmpImage)
+                            }
+                        }
+                        self.mNowPlayingTableView.reloadData()
+                        self.dismiss(animated: false, completion: nil)
+                    default:
+                        self.dismiss(animated: false, completion: nil)
+                        self.present(self.errorAlertController, animated: false, completion: nil)
+                    }
+                }
+                
+                /*
                 if((response.result.value) != nil) {
                     let swiftyJsonVar = JSON(response.result.value!)
                     //let totalResults = swiftyJsonVar["total_results"].int
@@ -82,8 +126,9 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                     }
                 }
                 self.mNowPlayingTableView.reloadData()
-                self.dismiss(animated: false, completion: nil)
+                self.dismiss(animated: false, completion: nil) */
             }
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -100,27 +145,66 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         
         Alamofire.request(url)
             .response { response in
-                //debugPrint(response)
-                //NSLog("response : \(response)")
+                debugPrint(response)
+
             }
             .responseJSON { response in
-                if((response.result.value) != nil) {
-                    let swiftyJsonVar = JSON(response.result.value!)
-                    for (_,subJson) in swiftyJsonVar["results"] {
-                        if let posterPath = subJson["poster_path"].string {
-                            print(posterPath)
-                            self.posterPathList.append(posterPath)
+                guard case let .failure(error) = response.result else {
+                    if((response.result.value) != nil) {
+                        let swiftyJsonVar = JSON(response.result.value!)
+                        for (_,subJson) in swiftyJsonVar["results"] {
+                            if let posterPath = subJson["poster_path"].string {
+                                print(posterPath)
+                                self.posterPathList.append(posterPath)
+                            }
+                            if let title = subJson["title"].string {
+                                self.movieTitle.append(title)
+                            }
+                            let tmpImage = UIImage()
+                            self.imageList.append(tmpImage)
                         }
-                        if let title = subJson["title"].string {
-                            self.movieTitle.append(title)
-                        }
-                        let tmpImage = UIImage()
-                        self.imageList.append(tmpImage)
                     }
+                    self.mNowPlayingTableView.reloadData()
+                    refreshControl.endRefreshing()
+                    self.dismiss(animated: false, completion: nil)
+                    return
                 }
-                self.mNowPlayingTableView.reloadData()
-                refreshControl.endRefreshing()
-                self.dismiss(animated: false, completion: nil)
+                
+                if let error = error as? AFError {
+                    switch error {
+                    case .invalidURL(let url):
+                        debugPrint("Invalid URL: \(url) - \(error.localizedDescription)")
+                    case .parameterEncodingFailed(let reason):
+                        debugPrint("Parameter encoding failed: \(error.localizedDescription)")
+                        debugPrint("Failure Reason: \(reason)")
+                    case .multipartEncodingFailed(let reason):
+                        debugPrint("Multipart encoding failed: \(error.localizedDescription)")
+                        debugPrint("Failure Reason: \(reason)")
+                    case .responseValidationFailed(let reason):
+                        debugPrint("Response validation failed: \(error.localizedDescription)")
+                        debugPrint("Failure Reason: \(reason)")
+                        
+                        switch reason {
+                        case .dataFileNil, .dataFileReadFailed:
+                            debugPrint("Downloaded file could not be read")
+                        case .missingContentType(let acceptableContentTypes):
+                            debugPrint("Content Type Missing: \(acceptableContentTypes)")
+                        case .unacceptableContentType(let acceptableContentTypes, let responseContentType):
+                            debugPrint("Response content type: \(responseContentType) was unacceptable: \(acceptableContentTypes)")
+                        case .unacceptableStatusCode(let code):
+                            debugPrint("Response status code was unacceptable: \(code)")
+                        }
+                    case .responseSerializationFailed(let reason):
+                        debugPrint("Response serialization failed: \(error.localizedDescription)")
+                        debugPrint("Failure Reason: \(reason)")
+                    }
+                    
+                    debugPrint("Underlying error: \(error.underlyingError)")
+                } else if let error = error as? URLError {
+                    debugPrint("URLError occurred: \(error)")
+                } else {
+                    debugPrint("Unknown error: \(error)")
+                }
             }
     }
 
