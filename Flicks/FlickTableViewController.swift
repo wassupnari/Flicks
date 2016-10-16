@@ -37,6 +37,18 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         refreshControl.addTarget(self, action: #selector(FlickTableViewController.refreshControlAction(_:)), for: UIControlEvents.valueChanged)
         mNowPlayingTableView.insertSubview(refreshControl, at: 0)
         
+        // Loader
+        let alertController = UIAlertController(title: nil, message: "Please wait\n\n", preferredStyle: UIAlertControllerStyle.alert)
+        
+        let spinnerIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
+        
+        spinnerIndicator.center = CGPoint(x: 135.0, y: 65.5)
+        spinnerIndicator.color = UIColor.black
+        spinnerIndicator.startAnimating()
+        
+        alertController.view.addSubview(spinnerIndicator)
+        self.present(alertController, animated: false, completion: nil)
+        
         // Setting view's data source and delegate properties
         mNowPlayingTableView.dataSource = self
         mNowPlayingTableView.delegate = self
@@ -71,6 +83,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                     }
                 }
                 self.mNowPlayingTableView.reloadData()
+                self.dismiss(animated: false, completion: nil)
             }
     }
 
