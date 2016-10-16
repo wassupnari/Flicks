@@ -17,6 +17,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     
     var data = [[String: String]]()
     var posterPathList = [String]()
+    var imageList = [UIImage]()
     var movieTitle = [String]()
 
     override func viewDidLoad() {
@@ -55,6 +56,8 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                         if let title = subJson["title"].string {
                             self.movieTitle.append(title)
                         }
+                        //let tmpImage: UIImage
+                        //self.imageList.append(tmpImage)
                     }
                 }
                 self.mNowPlayingTableView.reloadData()
@@ -85,7 +88,8 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
             if let image = response.result.value {
                 print("image downloaded: \(image)")
             } */
-            
+            //self.imageList.insert(cell.movieImage.image!, at: indexPath.row)
+            self.imageList.append(cell.movieImage.image!)
             
         }
     
@@ -103,13 +107,19 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         // do something here
     }
     
+    /*
+     * Pass data to another viewController
+     */
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let detailsViewController = segue.destination as? DetailsViewController
-        /*let indexPath = self.mNowPlayingTableView.indexPathForSelectedRow {
-            let photoUrl = self.posterPathList[indexPath.row]
-        }*/
+        let destinationViewController = segue.destination as! DetailsViewController
         
-        //detailsViewController.imageView = cell.
+        if let indexPath = self.mNowPlayingTableView.indexPathForSelectedRow {
+            // do the work here
+            destinationViewController.photoUrl = posterPathList[indexPath.row]
+            destinationViewController.image = imageList[indexPath.row]
+            debugPrint("index : \(indexPath)")
+        }
+        
     }
 
 }

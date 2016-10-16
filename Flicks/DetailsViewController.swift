@@ -7,17 +7,22 @@
 //
 
 import UIKit
+import Alamofire
 
 class DetailsViewController: UIViewController {
     
     
     @IBOutlet weak var detailsImageView: UIImageView!
-    var photoUrl: String = ""
+    var image: UIImage!
+    @IBOutlet weak var descriptionLabel: UILabel!
+    var photoUrl: String!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        detailsImageView.image = image
+        descriptionLabel.text = photoUrl
     }
 
     override func didReceiveMemoryWarning() {
