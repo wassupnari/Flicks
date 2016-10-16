@@ -56,8 +56,8 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                         if let title = subJson["title"].string {
                             self.movieTitle.append(title)
                         }
-                        //let tmpImage: UIImage
-                        //self.imageList.append(tmpImage)
+                        let tmpImage = UIImage()
+                        self.imageList.append(tmpImage)
                     }
                 }
                 self.mNowPlayingTableView.reloadData()
@@ -84,12 +84,8 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
             debugPrint(response.result)
             
             cell.movieImage.image = response.result.value
-            /*
-            if let image = response.result.value {
-                print("image downloaded: \(image)")
-            } */
-            //self.imageList.insert(cell.movieImage.image!, at: indexPath.row)
-            self.imageList.append(cell.movieImage.image!)
+            // Insert data to pass them to detail page
+            self.imageList.insert(cell.movieImage.image!, at:indexPath.row)
             
         }
     
