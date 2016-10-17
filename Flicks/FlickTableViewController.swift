@@ -59,29 +59,17 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         // We need to register the cell first
         //mNowPlayingTableView.register(UINib(nibName: "MovieCell", bundle: nil), forCellReuseIdentifier: "MovieCell")
         
+        
+        networkErrorUIView.isHidden = NetworkManager.isConnectedToNetwork()
+        
+        
         let apiKey = "deb86c335a6b5db138bb7565e746952b"
         let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)"
         
         Alamofire
             .request(url)
-            .response { response in
-                //debugPrint(response)
-                /*
-                debugPrint("nari \(response.response?.statusCode)")
-                if  let errorCode = response.response?.statusCode {
-                    switch errorCode {
-                    case 401:
-                        debugPrint("=========================")
-                    default:
-                        debugPrint("=")
-                        // do nothing
-                    }
-                }
- */
-                //NSLog("response : \(response)")
-            }
             .responseJSON { response in
-                
+                debugPrint("nari nari")
                 if  let errorCode = response.response?.statusCode {
                     switch errorCode {
                     case 401:
@@ -121,27 +109,13 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         
         self.present(alertController, animated: false, completion: nil)
         
+        networkErrorUIView.isHidden = NetworkManager.isConnectedToNetwork()
+        
         let apiKey = "deb86c335a6b5db138bb7565e746952b"
-        let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)000"
+        let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)"
         
         Alamofire
             .request(url)
-            .response { response in
-                //debugPrint(response)
-                /*
-                 debugPrint("nari \(response.response?.statusCode)")
-                 if  let errorCode = response.response?.statusCode {
-                 switch errorCode {
-                 case 401:
-                 debugPrint("=========================")
-                 default:
-                 debugPrint("=")
-                 // do nothing
-                 }
-                 }
-                 */
-                //NSLog("response : \(response)")
-            }
             .responseJSON { response in
                 
                 if  let errorCode = response.response?.statusCode {
