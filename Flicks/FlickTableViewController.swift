@@ -14,6 +14,7 @@ import AlamofireImage
 class FlickTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var mNowPlayingTableView: UITableView!
+    @IBOutlet weak var networkErrorUIView: UIView!
     
     var data = [[String: String]]()
     var posterPathList = [String]()
@@ -33,6 +34,8 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        networkErrorUIView.isHidden = true;
         
         // For pull-to-refresh
         let refreshControl = UIRefreshControl()
@@ -82,8 +85,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                 if  let errorCode = response.response?.statusCode {
                     switch errorCode {
                     case 401:
-                        self.dismiss(animated: false, completion: nil)
-                        self.present(self.errorAlertController, animated: false, completion: nil)
+                        self.networkErrorUIView.isHidden = false
                     case 200:
                         if((response.result.value) != nil) {
                             let swiftyJsonVar = JSON(response.result.value!)
@@ -102,31 +104,10 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                         self.mNowPlayingTableView.reloadData()
                         self.dismiss(animated: false, completion: nil)
                     default:
-                        self.dismiss(animated: false, completion: nil)
-                        self.present(self.errorAlertController, animated: false, completion: nil)
+                        self.networkErrorUIView.isHidden = false
                     }
                 }
-                
-                /*
-                if((response.result.value) != nil) {
-                    let swiftyJsonVar = JSON(response.result.value!)
-                    //let totalResults = swiftyJsonVar["total_results"].int
-                    //let resultData = swiftyJsonVar["results"].arrayObject!
-                    
-                    for (_,subJson) in swiftyJsonVar["results"] {
-                        if let posterPath = subJson["poster_path"].string {
-                            print(posterPath)
-                            self.posterPathList.append(posterPath)
-                        }
-                        if let title = subJson["title"].string {
-                            self.movieTitle.append(title)
-                        }
-                        let tmpImage = UIImage()
-                        self.imageList.append(tmpImage)
-                    }
-                }
-                self.mNowPlayingTableView.reloadData()
-                self.dismiss(animated: false, completion: nil) */
+                self.dismiss(animated: false, completion: nil)
             }
         
     }
@@ -141,8 +122,56 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         self.present(alertController, animated: false, completion: nil)
         
         let apiKey = "deb86c335a6b5db138bb7565e746952b"
-        let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)"
+        let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)000"
         
+        Alamofire
+            .request(url)
+            .response { response in
+                //debugPrint(response)
+                /*
+                 debugPrint("nari \(response.response?.statusCode)")
+                 if  let errorCode = response.response?.statusCode {
+                 switch errorCode {
+                 case 401:
+                 debugPrint("=========================")
+                 default:
+                 debugPrint("=")
+                 // do nothing
+                 }
+                 }
+                 */
+                //NSLog("response : \(response)")
+            }
+            .responseJSON { response in
+                
+                if  let errorCode = response.response?.statusCode {
+                    switch errorCode {
+                    case 401:
+                        self.networkErrorUIView.isHidden = false
+                    case 200:
+                        if((response.result.value) != nil) {
+                            let swiftyJsonVar = JSON(response.result.value!)
+                            for (_,subJson) in swiftyJsonVar["results"] {
+                                if let posterPath = subJson["poster_path"].string {
+                                    print(posterPath)
+                                    self.posterPathList.append(posterPath)
+                                }
+                                if let title = subJson["title"].string {
+                                    self.movieTitle.append(title)
+                                }
+                                let tmpImage = UIImage()
+                                self.imageList.append(tmpImage)
+                            }
+                        }
+                        self.mNowPlayingTableView.reloadData()
+                    default:
+                        self.networkErrorUIView.isHidden = false
+                    }
+                }
+                refreshControl.endRefreshing()
+                self.dismiss(animated: false, completion: nil)
+        }
+        /*
         Alamofire.request(url)
             .response { response in
                 debugPrint(response)
@@ -205,7 +234,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                 } else {
                     debugPrint("Unknown error: \(error)")
                 }
-            }
+            } */
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -252,7 +281,6 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
             // do the work here
             destinationViewController.photoUrl = posterPathList[indexPath.row]
             destinationViewController.image = imageList[indexPath.row]
-            debugPrint("index : \(indexPath)")
         }
         
     }
