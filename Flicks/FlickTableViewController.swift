@@ -14,12 +14,14 @@ import AlamofireImage
 class FlickTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var mNowPlayingTableView: UITableView!
+    @IBOutlet weak var networkErrorUIView: UIView!
     
     var data = [[String: String]]()
     var posterPathList = [String]()
     var imageList = [UIImage]()
     var movieTitle = [String]()
     let alertController = UIAlertController(title: nil, message: "Please wait\n\n", preferredStyle: UIAlertControllerStyle.alert)
+    let errorAlertController = UIAlertController(title: "Error", message: "An error occurred. Please try it again", preferredStyle: UIAlertControllerStyle.alert)
     
     /*
     lazy var refreshControl: UIRefreshControl = {
@@ -32,6 +34,8 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        networkErrorUIView.isHidden = true;
         
         // For pull-to-refresh
         let refreshControl = UIRefreshControl()
@@ -55,35 +59,45 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         // We need to register the cell first
         //mNowPlayingTableView.register(UINib(nibName: "MovieCell", bundle: nil), forCellReuseIdentifier: "MovieCell")
         
+        
+        networkErrorUIView.isHidden = NetworkManager.isConnectedToNetwork()
+        
+        
         let apiKey = "deb86c335a6b5db138bb7565e746952b"
         let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)"
         
-        Alamofire.request(url)
-            .response { response in
-                //debugPrint(response)
-                //NSLog("response : \(response)")
-            }
+        Alamofire
+            .request(url)
             .responseJSON { response in
-                if((response.result.value) != nil) {
-                    let swiftyJsonVar = JSON(response.result.value!)
-                    //let totalResults = swiftyJsonVar["total_results"].int
-                    //let resultData = swiftyJsonVar["results"].arrayObject!
-                    
-                    for (_,subJson) in swiftyJsonVar["results"] {
-                        if let posterPath = subJson["poster_path"].string {
-                            print(posterPath)
-                            self.posterPathList.append(posterPath)
+                debugPrint("nari nari")
+                if  let errorCode = response.response?.statusCode {
+                    switch errorCode {
+                    case 401:
+                        self.networkErrorUIView.isHidden = false
+                    case 200:
+                        if((response.result.value) != nil) {
+                            let swiftyJsonVar = JSON(response.result.value!)
+                            for (_,subJson) in swiftyJsonVar["results"] {
+                                if let posterPath = subJson["poster_path"].string {
+                                    print(posterPath)
+                                    self.posterPathList.append(posterPath)
+                                }
+                                if let title = subJson["title"].string {
+                                    self.movieTitle.append(title)
+                                }
+                                let tmpImage = UIImage()
+                                self.imageList.append(tmpImage)
+                            }
                         }
-                        if let title = subJson["title"].string {
-                            self.movieTitle.append(title)
-                        }
-                        let tmpImage = UIImage()
-                        self.imageList.append(tmpImage)
+                        self.mNowPlayingTableView.reloadData()
+                        self.dismiss(animated: false, completion: nil)
+                    default:
+                        self.networkErrorUIView.isHidden = false
                     }
                 }
-                self.mNowPlayingTableView.reloadData()
                 self.dismiss(animated: false, completion: nil)
             }
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -95,33 +109,106 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         
         self.present(alertController, animated: false, completion: nil)
         
+        networkErrorUIView.isHidden = NetworkManager.isConnectedToNetwork()
+        
         let apiKey = "deb86c335a6b5db138bb7565e746952b"
         let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)"
         
-        Alamofire.request(url)
-            .response { response in
-                //debugPrint(response)
-                //NSLog("response : \(response)")
-            }
+        Alamofire
+            .request(url)
             .responseJSON { response in
-                if((response.result.value) != nil) {
-                    let swiftyJsonVar = JSON(response.result.value!)
-                    for (_,subJson) in swiftyJsonVar["results"] {
-                        if let posterPath = subJson["poster_path"].string {
-                            print(posterPath)
-                            self.posterPathList.append(posterPath)
+                
+                if  let errorCode = response.response?.statusCode {
+                    switch errorCode {
+                    case 401:
+                        self.networkErrorUIView.isHidden = false
+                    case 200:
+                        if((response.result.value) != nil) {
+                            let swiftyJsonVar = JSON(response.result.value!)
+                            for (_,subJson) in swiftyJsonVar["results"] {
+                                if let posterPath = subJson["poster_path"].string {
+                                    print(posterPath)
+                                    self.posterPathList.append(posterPath)
+                                }
+                                if let title = subJson["title"].string {
+                                    self.movieTitle.append(title)
+                                }
+                                let tmpImage = UIImage()
+                                self.imageList.append(tmpImage)
+                            }
                         }
-                        if let title = subJson["title"].string {
-                            self.movieTitle.append(title)
-                        }
-                        let tmpImage = UIImage()
-                        self.imageList.append(tmpImage)
+                        self.mNowPlayingTableView.reloadData()
+                    default:
+                        self.networkErrorUIView.isHidden = false
                     }
                 }
-                self.mNowPlayingTableView.reloadData()
                 refreshControl.endRefreshing()
                 self.dismiss(animated: false, completion: nil)
+        }
+        /*
+        Alamofire.request(url)
+            .response { response in
+                debugPrint(response)
+
             }
+            .responseJSON { response in
+                guard case let .failure(error) = response.result else {
+                    if((response.result.value) != nil) {
+                        let swiftyJsonVar = JSON(response.result.value!)
+                        for (_,subJson) in swiftyJsonVar["results"] {
+                            if let posterPath = subJson["poster_path"].string {
+                                print(posterPath)
+                                self.posterPathList.append(posterPath)
+                            }
+                            if let title = subJson["title"].string {
+                                self.movieTitle.append(title)
+                            }
+                            let tmpImage = UIImage()
+                            self.imageList.append(tmpImage)
+                        }
+                    }
+                    self.mNowPlayingTableView.reloadData()
+                    refreshControl.endRefreshing()
+                    self.dismiss(animated: false, completion: nil)
+                    return
+                }
+                
+                if let error = error as? AFError {
+                    switch error {
+                    case .invalidURL(let url):
+                        debugPrint("Invalid URL: \(url) - \(error.localizedDescription)")
+                    case .parameterEncodingFailed(let reason):
+                        debugPrint("Parameter encoding failed: \(error.localizedDescription)")
+                        debugPrint("Failure Reason: \(reason)")
+                    case .multipartEncodingFailed(let reason):
+                        debugPrint("Multipart encoding failed: \(error.localizedDescription)")
+                        debugPrint("Failure Reason: \(reason)")
+                    case .responseValidationFailed(let reason):
+                        debugPrint("Response validation failed: \(error.localizedDescription)")
+                        debugPrint("Failure Reason: \(reason)")
+                        
+                        switch reason {
+                        case .dataFileNil, .dataFileReadFailed:
+                            debugPrint("Downloaded file could not be read")
+                        case .missingContentType(let acceptableContentTypes):
+                            debugPrint("Content Type Missing: \(acceptableContentTypes)")
+                        case .unacceptableContentType(let acceptableContentTypes, let responseContentType):
+                            debugPrint("Response content type: \(responseContentType) was unacceptable: \(acceptableContentTypes)")
+                        case .unacceptableStatusCode(let code):
+                            debugPrint("Response status code was unacceptable: \(code)")
+                        }
+                    case .responseSerializationFailed(let reason):
+                        debugPrint("Response serialization failed: \(error.localizedDescription)")
+                        debugPrint("Failure Reason: \(reason)")
+                    }
+                    
+                    debugPrint("Underlying error: \(error.underlyingError)")
+                } else if let error = error as? URLError {
+                    debugPrint("URLError occurred: \(error)")
+                } else {
+                    debugPrint("Unknown error: \(error)")
+                }
+            } */
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -168,7 +255,6 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
             // do the work here
             destinationViewController.photoUrl = posterPathList[indexPath.row]
             destinationViewController.image = imageList[indexPath.row]
-            debugPrint("index : \(indexPath)")
         }
         
     }
