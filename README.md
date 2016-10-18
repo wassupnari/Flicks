@@ -4,7 +4,7 @@
 
 **Flicks** is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
-Time spent: **X** hours spent in total
+Time spent: **15** hours spent in total
 
 ## User Stories
 
@@ -34,13 +34,17 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='http://imgur.com/a/UAVKF' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+- For me there was a big learning curve to finish this project, because I wasn’t familiar with Swift language, iOS platform, and Xcode tool. I started building stuff after the group lab session without watching any video materials, but in retrospect, I would have been better if I have watched the video first before I start building things.
+- At first, I tried building tableview cells with separate .xib file, but for some reason the Segue didn’t open the detail page. So I had to move my UI components into the storyboard, and then it worked as expected. After doing some research, I realized that I needed to put some code to connect .xib with storyboard, and I think I was missing that part.
+- I used Alamofire as my HTTP library, and I really liked it. For this project, I didn’t do much with Alamofire, but I think it can be really powerful if I need to build things with rest adapter, header/cookie interceptors, or etc. Also, I have built retry method on Android with Retrofit in the past, and I remember it was pretty complicated, but Alamofire has retry function as a built-in feature, and I think it’s a really nice addition.
+- For the JSON parser, I used SwiftyJSON, and I wonder if it has similar ability as Gson on Android, like converting JSON data into a data object class. In this project, I had to traverse JSON data key by key, but it would be easier if I can just create a data model from the JSON response, so that I can just reference that data model to populate the view and also pass it as parameter for other viewControllers.
+- I didn’t have much time to build additional features, but overall, this was very good first project and I think I learned a lot!
 
 ## License
 
