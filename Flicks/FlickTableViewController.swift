@@ -20,6 +20,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     var posterPathList = [String]()
     var imageList = [UIImage]()
     var movieTitle = [String]()
+    var movieOverview = [String]()
     let alertController = UIAlertController(title: nil, message: "Please wait\n\n", preferredStyle: UIAlertControllerStyle.alert)
     let errorAlertController = UIAlertController(title: "Error", message: "An error occurred. Please try it again", preferredStyle: UIAlertControllerStyle.alert)
     
@@ -85,6 +86,9 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                                 if let title = subJson["title"].string {
                                     self.movieTitle.append(title)
                                 }
+                                if let desc = subJson["overview"].string {
+                                    self.movieOverview.append(desc)
+                                }
                                 let tmpImage = UIImage()
                                 self.imageList.append(tmpImage)
                             }
@@ -132,6 +136,9 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                                 }
                                 if let title = subJson["title"].string {
                                     self.movieTitle.append(title)
+                                }
+                                if let desc = subJson["overview"].string {
+                                    self.movieOverview.append(desc)
                                 }
                                 let tmpImage = UIImage()
                                 self.imageList.append(tmpImage)
@@ -215,6 +222,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         let cell = tableView.dequeueReusableCell(withIdentifier: "com.nari.MoviePrototypeCell", for: indexPath) as! MoviePrototypeCell
         let path = posterPathList[indexPath.row]
         cell.movieTitle.text = movieTitle[indexPath.row]
+        cell.movieOverview.text = movieOverview[indexPath.row]
     
         
         // Set image
