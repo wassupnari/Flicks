@@ -34,9 +34,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.makeagif.com/media/10-18-2016/vY8N1j.gif' />
-
-![](http://i.makeagif.com/media/10-18-2016/vY8N1j.gif)
+<img src='Flicks.gif' />
 
 Click [here](http://i.makeagif.com/media/10-18-2016/vY8N1j.gif) in case gif animation doesn't show up.
 
