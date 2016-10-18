@@ -34,7 +34,11 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://media.giphy.com/media/l0MYPeGLASgsGF5S0/source.gif' />
+<img src='http://i.makeagif.com/media/10-18-2016/vY8N1j.gif' />
+
+![](http://i.makeagif.com/media/10-18-2016/vY8N1j.gif)
+
+Click [here](http://i.makeagif.com/media/10-18-2016/vY8N1j.gif) in case gif animation doesn't show up.
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
