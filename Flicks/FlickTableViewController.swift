@@ -16,7 +16,6 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     @IBOutlet weak var mNowPlayingTableView: UITableView!
     @IBOutlet weak var networkErrorUIView: UIView!
     
-    var data = [[String: String]]()
     var posterPathList = [String]()
     var imageList = [UIImage]()
     var movieTitle = [String]()
@@ -24,6 +23,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
     let alertController = UIAlertController(title: nil, message: "Please wait\n\n", preferredStyle: UIAlertControllerStyle.alert)
     let errorAlertController = UIAlertController(title: "Error", message: "An error occurred. Please try it again", preferredStyle: UIAlertControllerStyle.alert)
     
+    // I'll leave this code for the future reference
     /*
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
@@ -51,7 +51,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         spinnerIndicator.startAnimating()
         
         alertController.view.addSubview(spinnerIndicator)
-        self.present(alertController, animated: false, completion: nil)
+        
         
         // Setting view's data source and delegate properties
         mNowPlayingTableView.dataSource = self
@@ -60,17 +60,20 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         // We need to register the cell first
         //mNowPlayingTableView.register(UINib(nibName: "MovieCell", bundle: nil), forCellReuseIdentifier: "MovieCell")
         
-        
+        // Update the visibility of network error view
         networkErrorUIView.isHidden = NetworkManager.isConnectedToNetwork()
         
+        if(NetworkManager.isConnectedToNetwork()) {
         
+        // Get now playing list from server
         let apiKey = "deb86c335a6b5db138bb7565e746952b"
         let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)"
+            
+            self.present(alertController, animated: false, completion: nil)
         
         Alamofire
             .request(url)
             .responseJSON { response in
-                debugPrint("nari nari")
                 if  let errorCode = response.response?.statusCode {
                     switch errorCode {
                     case 401:
@@ -80,7 +83,6 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                             let swiftyJsonVar = JSON(response.result.value!)
                             for (_,subJson) in swiftyJsonVar["results"] {
                                 if let posterPath = subJson["poster_path"].string {
-                                    print(posterPath)
                                     self.posterPathList.append(posterPath)
                                 }
                                 if let title = subJson["title"].string {
@@ -101,6 +103,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                 }
                 self.dismiss(animated: false, completion: nil)
             }
+        }
         
     }
 
@@ -114,6 +117,12 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         self.present(alertController, animated: false, completion: nil)
         
         networkErrorUIView.isHidden = NetworkManager.isConnectedToNetwork()
+        
+        if(!NetworkManager.isConnectedToNetwork()) {
+            refreshControl.endRefreshing()
+            self.dismiss(animated: false, completion: nil)
+            return
+        }
         
         let apiKey = "deb86c335a6b5db138bb7565e746952b"
         let url = "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)"
@@ -131,7 +140,6 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                             let swiftyJsonVar = JSON(response.result.value!)
                             for (_,subJson) in swiftyJsonVar["results"] {
                                 if let posterPath = subJson["poster_path"].string {
-                                    print(posterPath)
                                     self.posterPathList.append(posterPath)
                                 }
                                 if let title = subJson["title"].string {
@@ -152,6 +160,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                 refreshControl.endRefreshing()
                 self.dismiss(animated: false, completion: nil)
         }
+        // I'll leave this code for the future reference.
         /*
         Alamofire.request(url)
             .response { response in
@@ -217,6 +226,10 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                 }
             } */
     }
+    
+    func loadTableView() {
+        
+    }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "com.nari.MoviePrototypeCell", for: indexPath) as! MoviePrototypeCell
@@ -227,20 +240,11 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         
         // Set image
         Alamofire.request("https://image.tmdb.org/t/p/w300\(path)").responseImage { response in
-            debugPrint(response)
-            
-            print(response.request)
-            print(response.response)
-            debugPrint(response.result)
-            
             cell.movieImage.image = response.result.value
             // Insert data to pass them to detail page
             self.imageList.insert(cell.movieImage.image!, at:indexPath.row)
             
         }
-    
-        print("row path : \(path)")
-        //cell.stateLabel.text = cityState.last
         return cell
     }
     
@@ -261,11 +265,9 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         
         if let indexPath = self.mNowPlayingTableView.indexPathForSelectedRow {
             // do the work here
-            destinationViewController.photoUrl = posterPathList[indexPath.row]
+            destinationViewController.photoUrl = movieOverview[indexPath.row]
             destinationViewController.image = imageList[indexPath.row]
         }
-        
     }
-
 }
 
