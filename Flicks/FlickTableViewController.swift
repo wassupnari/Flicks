@@ -272,7 +272,7 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         
         if let indexPath = self.mNowPlayingTableView.indexPathForSelectedRow {
             // do the work here
-            destinationViewController.photoUrl = movieOverview[indexPath.row]
+            destinationViewController.overview = movieOverview[indexPath.row]
             destinationViewController.image = imageList[indexPath.row]
         }
     }

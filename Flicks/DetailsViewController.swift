@@ -15,14 +15,14 @@ class DetailsViewController: UIViewController {
     @IBOutlet weak var detailsImageView: UIImageView!
     var image: UIImage!
     @IBOutlet weak var descriptionLabel: UILabel!
-    var photoUrl: String!
+    var overview: String!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         detailsImageView.image = image
-        descriptionLabel.text = photoUrl
+        descriptionLabel.text = overview
     }
 
     override func didReceiveMemoryWarning() {
