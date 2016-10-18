@@ -80,6 +80,10 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                         self.networkErrorUIView.isHidden = false
                     case 200:
                         if((response.result.value) != nil) {
+                            self.posterPathList.removeAll()
+                            self.movieTitle.removeAll()
+                            self.movieOverview.removeAll()
+                            self.imageList.removeAll()
                             let swiftyJsonVar = JSON(response.result.value!)
                             for (_,subJson) in swiftyJsonVar["results"] {
                                 if let posterPath = subJson["poster_path"].string {
@@ -137,6 +141,10 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
                         self.networkErrorUIView.isHidden = false
                     case 200:
                         if((response.result.value) != nil) {
+                            self.posterPathList.removeAll()
+                            self.movieTitle.removeAll()
+                            self.movieOverview.removeAll()
+                            self.imageList.removeAll()
                             let swiftyJsonVar = JSON(response.result.value!)
                             for (_,subJson) in swiftyJsonVar["results"] {
                                 if let posterPath = subJson["poster_path"].string {
@@ -236,7 +244,6 @@ class FlickTableViewController: UIViewController, UITableViewDelegate, UITableVi
         let path = posterPathList[indexPath.row]
         cell.movieTitle.text = movieTitle[indexPath.row]
         cell.movieOverview.text = movieOverview[indexPath.row]
-    
         
         // Set image
         Alamofire.request("https://image.tmdb.org/t/p/w300\(path)").responseImage { response in
